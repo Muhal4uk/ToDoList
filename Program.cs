@@ -9,31 +9,37 @@ namespace Program
         {
             List<Task> tasks = new List<Task>();
             Task task = new Task();
+
+            Dictionary<char, Action> actions = new Dictionary<char, Action>()
+            {
+                { '1', () => task.AddTask(tasks) },
+                { '2', () => task.RemoveTask(tasks) },
+                { '3', () => task.ShowTaskList(tasks) },
+                { '4', () => task.MarkCompleted(tasks) },
+                { '5', () => Environment.Exit(0) }
+            };
+
             while (true)
             {
-                Console.WriteLine("Виберіть дію:\n1. Додати завдання\n2. Видалити завдання\n3. Показати список завдань\n4. Позначити виконаним\n5. Вийти"); 
-                char action = char.Parse(Console.ReadLine());
-                switch (action)
+                try
                 {
-                    case '1':
-                        task.AddTask(tasks);
-                        break;
-                    case '2':
-                        task.RemoveTask(tasks);
-                        break;
-                    case '3':
-                        task.ShowTaskList(tasks);
-                        break;
-                    case '4':
-                        task.MarkCompleted(tasks);
-                        break;
-                    case '5':
-                        return;
-                    default:
+                    Console.WriteLine("Виберіть дію:\n1. Додати завдання\n2. Видалити завдання\n3. Показати список завдань\n4. Позначити виконаним\n5. Вийти");
+                    char action = char.Parse(Console.ReadLine());
+
+                    if (actions.ContainsKey(action))
+                    {
+                        actions[action].Invoke();
+                    }
+                    else
+                    {
                         Console.WriteLine("\nВи ввели неправильний номер завдання");
-                        break;
+                    }
+                }
+                catch (System.Exception)
+                {
+                    Console.WriteLine("\nВиникла помилка. Спробуйте ще раз.");
                 }
             }
         }
-    }  
+    }
 }
